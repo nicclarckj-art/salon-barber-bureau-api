@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bureau Admin — Salon & Barber Bureau</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#F6EEE1; --ivory-deep:#EFE3D0; --espresso:#2B2117; --espresso-soft:#5A4C3C;
+    --brass:#B07A34; --brass-deep:#8C5F27; --terracotta:#C15B3C; --line:#D9C7A8; --paper:#FBF6EC;
+    --green:#3D7A4D;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--ivory);color:var(--espresso);font-family:'Inter',sans-serif;}
+  .wrap{max-width:1000px;margin:0 auto;padding:28px;}
+  h1{font-family:'Fraunces',serif;font-size:1.6rem;font-weight:700;margin-bottom:4px;}
+  .sub{color:var(--espresso-soft);font-size:0.88rem;margin-bottom:28px;}
+
+  /* PIN gate */
+  #pin-gate{
+    max-width:340px;margin:80px auto;text-align:center;
+  }
+  #pin-gate input{
+    width:100%;padding:14px;font-size:1.4rem;text-align:center;letter-spacing:0.3em;
+    border:1px solid var(--line);border-radius:3px;background:var(--paper);margin-bottom:14px;
+    font-family:'JetBrains Mono',monospace;
+  }
+  #pin-gate button{
+    width:100%;padding:13px;background:var(--espresso);color:var(--ivory);border:none;
+    border-radius:2px;font-weight:600;font-size:0.9rem;cursor:pointer;
+  }
+  #pin-error{color:var(--terracotta);font-size:0.85rem;margin-top:10px;min-height:1.2em;}
+
+  #dashboard{display:none;}
+
+  .tabs{display:flex;gap:2px;margin-bottom:22px;border-bottom:1px solid var(--line);}
+  .tab-btn{
+    background:transparent;border:none;padding:10px 18px;font-weight:600;font-size:0.88rem;
+    color:var(--espresso-soft);cursor:pointer;border-bottom:2px solid transparent;
+  }
+  .tab-btn.active{color:var(--espresso);border-bottom-color:var(--terracotta);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  .card{
+    background:var(--paper);border:1px solid var(--line);border-radius:3px;
+    padding:18px 20px;margin-bottom:14px;
+  }
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;}
+  .card-title{font-family:'Fraunces',serif;font-weight:600;font-size:1.05rem;}
+  .card-sub{font-size:0.82rem;color:var(--espresso-soft);margin-top:2px;}
+  .badge{
+    font-family:'JetBrains Mono',monospace;font-size:0.68rem;text-transform:uppercase;
+    letter-spacing:0.04em;padding:4px 9px;border-radius:12px;white-space:nowrap;
+    border:1px solid var(--brass-deep);color:var(--brass-deep);
+  }
+  .badge.placed{border-color:var(--green);color:var(--green);}
+  .card-body{font-size:0.88rem;color:var(--espresso);line-height:1.6;}
+  .card-body div{margin-bottom:2px;}
+  .card-actions{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+  select, input[type=text]{
+    font-family:'Inter',sans-serif;font-size:0.85rem;padding:8px 10px;
+    border:1px solid var(--line);border-radius:2px;background:var(--ivory);
+  }
+  .btn{
+    padding:9px 16px;border-radius:2px;font-weight:600;font-size:0.84rem;cursor:pointer;border:none;
+  }
+  .btn-primary{background:var(--terracotta);color:var(--paper);}
+  .btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+  .empty{color:var(--espresso-soft);font-size:0.9rem;padding:20px 0;text-align:center;}
+  .msg{font-size:0.84rem;margin-top:8px;font-weight:500;}
+  .msg.success{color:var(--green);}
+  .msg.error{color:var(--terracotta);}
+  .refresh-row{display:flex;justify-content:flex-end;margin-bottom:14px;}
+  .refresh-row button{background:none;border:1px solid var(--line);border-radius:2px;padding:7px 14px;font-size:0.8rem;cursor:pointer;color:var(--espresso-soft);}
+</style>
+</head>
+<body>
+
+<div id="pin-gate">
+  <h1>Bureau Admin</h1>
+  <p class="sub">Enter PIN to continue</p>
+  <input type="password" id="pin-input" maxlength="6" inputmode="numeric" placeholder="••••">
+  <button onclick="tryLogin()">Enter</button>
+  <div id="pin-error"></div>
+</div>
+
+<div id="dashboard">
+  <div class="wrap">
+    <h1>Bureau Admin</h1>
+    <p class="sub">Confirm matches, verify M-Pesa placement fees, release contact details.</p>
+
+    <div class="refresh-row"><button onclick="loadData()">↻ Refresh</button></div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="roles">Open Roles</button>
+      <button class="tab-btn" data-tab="candidates">Candidates</button>
+      <button class="tab-btn" data-tab="placements">Placements</button>
+    </div>
+
+    <div class="tab-panel active" id="panel-roles"></div>
+    <div class="tab-panel" id="panel-candidates"></div>
+    <div class="tab-panel" id="panel-placements"></div>
+  </div>
+</div>
+
+<script>
+  // ===== SET THIS ONE LINE ONCE YOU HAVE YOUR RAILWAY URL =====
+  const API_BASE = 'https://salon-barber-bureau-api-production.up.railway.app';
+  // ==============================================================
+
+  let PIN = '';
+  let DATA = { roles: [], candidates: [], placements: [] };
+
+  async function safeJsonFetch(url, options) {
+    const res = await fetch(url, options);
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      throw new Error(`Server did not return JSON (status ${res.status}). Functions may not be deployed correctly.`);
+    }
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Something went wrong');
+    return data;
+  }
+
+  function tryLogin() {
+    const val = document.getElementById('pin-input').value;
+    PIN = val;
+    document.getElementById('pin-error').textContent = '';
+    loadData(true);
+  }
+
+  document.getElementById('pin-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') tryLogin();
+  });
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  async function loadData(isLogin) {
+    try {
+      const data = await safeJsonFetch(`${API_BASE}/api/admin-data`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin: PIN })
+      });
+      DATA = data;
+      document.getElementById('pin-gate').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      renderRoles();
+      renderCandidates();
+      renderPlacements();
+    } catch (err) {
+      if (isLogin) document.getElementById('pin-error').textContent = err.message || 'Could not connect. Try again.';
+    }
+  }
+
+  function renderRoles() {
+    const panel = document.getElementById('panel-roles');
+    const openRoles = DATA.roles.filter(r => r.Status !== 'Placed' && r.Status !== 'Closed');
+    if (!openRoles.length) { panel.innerHTML = '<div class="empty">No open roles.</div>'; return; }
+
+    panel.innerHTML = openRoles.map(r => {
+      const candidateOptions = DATA.candidates
+        .filter(c => c.Status === 'Available' || c.Status === 'Shortlisted')
+        .map(c => `<option value="${c.id}">${c['Full Name']} — ${c.Specialty || ''}</option>`)
+        .join('');
+      return `
+        <div class="card">
+          <div class="card-top">
+            <div>
+              <div class="card-title">${r['Role Title'] || 'Untitled role'}</div>
+              <div class="card-sub">${r['Salon Name'] || ''} · ${r['County'] || ''}</div>
+            </div>
+            <span class="badge">${r.Status || ''}</span>
+          </div>
+          <div class="card-body">
+            <div>Level: ${r['Role Level'] || '—'} · Fee: KES ${r['Placement Fee (KES)'] || '—'}</div>
+            <div>Phone: ${r['Phone'] || '—'}</div>
+            ${r['Pay Range (KES)'] ? `<div>Pay: ${r['Pay Range (KES)']}</div>` : ''}
+          </div>
+          <div class="card-actions">
+            <select id="match-select-${r.id}">
+              <option value="">Select candidate to match...</option>
+              ${candidateOptions}
+            </select>
+            <button class="btn btn-primary" onclick="confirmMatch('${r.id}')">Confirm match</button>
+          </div>
+          <div class="msg" id="match-msg-${r.id}"></div>
+        </div>`;
+    }).join('');
+  }
+
+  function renderCandidates() {
+    const panel = document.getElementById('panel-candidates');
+    if (!DATA.candidates.length) { panel.innerHTML = '<div class="empty">No candidates registered.</div>'; return; }
+    panel.innerHTML = DATA.candidates.map(c => `
+      <div class="card">
+        <div class="card-top">
+          <div>
+            <div class="card-title">${c['Full Name'] || ''}</div>
+            <div class="card-sub">${c['Specialty'] || ''} · ${c['County'] || ''}</div>
+          </div>
+          <span class="badge ${c.Status === 'Placed' ? 'placed' : ''}">${c.Status || ''}</span>
+        </div>
+        <div class="card-body">
+          <div>Level: ${c['Role Level'] || '—'} · Experience: ${c['Years of Experience'] ?? '—'} yrs</div>
+          <div>Phone: ${c['Phone'] || '—'}</div>
+        </div>
+      </div>`).join('');
+  }
+
+  function renderPlacements() {
+    const panel = document.getElementById('panel-placements');
+    if (!DATA.placements.length) { panel.innerHTML = '<div class="empty">No placements yet.</div>'; return; }
+    panel.innerHTML = DATA.placements.map(p => {
+      const isPending = p['Payment Status'] === 'Awaiting payment';
+      return `
+        <div class="card">
+          <div class="card-top">
+            <div>
+              <div class="card-title">${p['Placement Ref'] || p.id}</div>
+              <div class="card-sub">Fee: KES ${p['Placement Fee (KES)'] || '—'} · Till 4086426</div>
+            </div>
+            <span class="badge ${p['Payment Status'] === 'Paid - verified' ? 'placed' : ''}">${p['Payment Status'] || ''}</span>
+          </div>
+          ${isPending ? `
+          <div class="card-actions">
+            <input type="text" id="mpesa-code-${p.id}" placeholder="M-Pesa code (10 chars)" maxlength="10">
+            <input type="text" id="mpesa-phone-${p.id}" placeholder="Payer phone (optional)">
+            <button class="btn btn-primary" onclick="verifyPayment('${p.id}')">Verify & release contact</button>
+          </div>
+          <div class="msg" id="verify-msg-${p.id}"></div>
+          ` : `<div class="card-body">Code: ${p['M-Pesa Transaction Code'] || '—'} · Contact released: ${p['Contact Details Released'] ? 'Yes' : 'No'}</div>`}
+        </div>`;
+    }).join('');
+  }
+
+  async function confirmMatch(roleId) {
+    const select = document.getElementById('match-select-' + roleId);
+    const candidateId = select.value;
+    const msgEl = document.getElementById('match-msg-' + roleId);
+    if (!candidateId) { msgEl.textContent = 'Select a candidate first.'; msgEl.className = 'msg error'; return; }
+
+    msgEl.textContent = 'Confirming...'; msgEl.className = 'msg';
+    try {
+      const data = await safeJsonFetch(`${API_BASE}/api/admin-confirm-match`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin: PIN, roleId, candidateId })
+      });
+      msgEl.textContent = data.message;
+      msgEl.className = 'msg success';
+      setTimeout(() => loadData(), 1200);
+    } catch (err) {
+      msgEl.textContent = err.message || 'Failed to confirm match.';
+      msgEl.className = 'msg error';
+    }
+  }
+
+  async function verifyPayment(placementId) {
+    const code = document.getElementById('mpesa-code-' + placementId).value;
+    const phone = document.getElementById('mpesa-phone-' + placementId).value;
+    const msgEl = document.getElementById('verify-msg-' + placementId);
+    msgEl.textContent = 'Verifying...'; msgEl.className = 'msg';
+    try {
+      await safeJsonFetch(`${API_BASE}/api/admin-verify-payment`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin: PIN, placementId, mpesaCode: code, phone })
+      });
+      msgEl.textContent = 'Payment verified. Contact details released.';
+      msgEl.className = 'msg success';
+      setTimeout(() => loadData(), 1200);
+    } catch (err) {
+      msgEl.textContent = err.message || 'Failed to verify payment.';
+      msgEl.className = 'msg error';
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salon &amp; Barber Bureau — Vetted grooming professionals, placed properly</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#F6EEE1;
+    --ivory-deep:#EFE3D0;
+    --espresso:#2B2117;
+    --espresso-soft:#5A4C3C;
+    --brass:#B07A34;
+    --brass-deep:#8C5F27;
+    --terracotta:#C15B3C;
+    --line:#D9C7A8;
+    --paper:#FBF6EC;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ivory);
+    color:var(--espresso);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--brass);color:var(--paper);}
+
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px;}
+
+  a{color:inherit;text-decoration:none;}
+
+  /* subtle paper texture via noise-like grain */
+  body::before{
+    content:"";
+    position:fixed;inset:0;
+    pointer-events:none;
+    background-image:radial-gradient(circle at 1px 1px, rgba(43,33,23,0.035) 1px, transparent 0);
+    background-size:22px 22px;
+    z-index:0;
+  }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(246,238,225,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 28px;max-width:1080px;margin:0 auto;
+  }
+  .brand{
+    display:flex;align-items:center;gap:10px;
+    font-family:'Fraunces',serif;font-weight:600;font-size:1.15rem;
+    letter-spacing:-0.01em;
+  }
+  .brand .mark{
+    width:34px;height:34px;border-radius:3px;
+    background:var(--espresso);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--ivory);font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;font-weight:500;letter-spacing:0.02em;
+  }
+  .nav-links{display:flex;gap:34px;font-size:0.88rem;font-weight:500;color:var(--espresso-soft);}
+  .nav-links a:hover{color:var(--brass-deep);}
+  .nav-cta{
+    background:var(--espresso);color:var(--paper);
+    padding:10px 20px;border-radius:2px;font-size:0.85rem;font-weight:600;
+    border:1px solid var(--espresso);
+    transition:background 0.2s,color 0.2s;
+  }
+  .nav-cta:hover{background:transparent;color:var(--espresso);}
+  @media(max-width:760px){.nav-links{display:none;}}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;z-index:1;
+    padding:90px 0 70px;
+    border-bottom:1px solid var(--line);
+  }
+  .hero-grid{
+    display:grid;grid-template-columns:1.1fr 0.9fr;gap:56px;align-items:start;
+  }
+  @media(max-width:860px){.hero-grid{grid-template-columns:1fr;}}
+
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;
+    color:var(--brass-deep);
+    display:flex;align-items:center;gap:10px;margin-bottom:22px;
+  }
+  .eyebrow::before{
+    content:"";width:26px;height:1px;background:var(--brass-deep);
+  }
+
+  h1{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:clamp(2.4rem,4.6vw,3.6rem);
+    line-height:1.06;
+    letter-spacing:-0.015em;
+    color:var(--espresso);
+    margin-bottom:22px;
+  }
+  h1 em{
+    font-style:italic;font-weight:500;color:var(--terracotta);
+  }
+  .hero p.lede{
+    font-size:1.08rem;line-height:1.6;color:var(--espresso-soft);
+    max-width:46ch;margin-bottom:34px;
+  }
+  .hero-actions{display:flex;gap:14px;flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--terracotta);color:var(--paper);
+    padding:14px 26px;border-radius:2px;font-weight:600;font-size:0.92rem;
+    border:1px solid var(--terracotta);
+    transition:opacity 0.2s;
+  }
+  .btn-primary:hover{opacity:0.88;}
+  .btn-secondary{
+    padding:14px 26px;border-radius:2px;font-weight:600;font-size:0.92rem;
+    border:1px solid var(--espresso);color:var(--espresso);
+    transition:background 0.2s,color 0.2s;
+  }
+  .btn-secondary:hover{background:var(--espresso);color:var(--paper);}
+
+  .hero-stats{
+    display:flex;gap:36px;margin-top:46px;padding-top:28px;
+    border-top:1px solid var(--line);
+  }
+  .stat-num{font-family:'Fraunces',serif;font-size:1.8rem;font-weight:600;color:var(--espresso);}
+  .stat-label{font-size:0.78rem;color:var(--espresso-soft);margin-top:2px;}
+
+  /* ---------- REGISTRY CARD (signature element) ---------- */
+  .registry-card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:3px;
+    box-shadow:0 18px 40px -18px rgba(43,33,23,0.25);
+    overflow:hidden;
+    transform:rotate(0.6deg);
+  }
+  .registry-head{
+    display:flex;justify-content:space-between;align-items:flex-start;
+    padding:20px 22px 16px;
+    border-bottom:1px dashed var(--line);
+  }
+  .registry-title{
+    font-family:'JetBrains Mono',monospace;font-size:0.7rem;
+    letter-spacing:0.08em;text-transform:uppercase;color:var(--espresso-soft);
+  }
+  .registry-id{
+    font-family:'JetBrains Mono',monospace;font-size:0.72rem;
+    color:var(--brass-deep);font-weight:500;
+  }
+  .registry-body{padding:20px 22px;}
+  .r-field{margin-bottom:16px;}
+  .r-label{
+    font-family:'JetBrains Mono',monospace;font-size:0.66rem;
+    text-transform:uppercase;letter-spacing:0.08em;color:var(--espresso-soft);
+    margin-bottom:5px;
+  }
+  .r-value{font-size:0.95rem;font-weight:600;color:var(--espresso);}
+  .r-row{display:flex;gap:20px;}
+  .r-row .r-field{flex:1;}
+  .registry-stamp{
+    margin-top:18px;padding-top:18px;border-top:1px dashed var(--line);
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .stamp-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    border:1.5px solid var(--terracotta);color:var(--terracotta);
+    padding:7px 14px;border-radius:20px;
+    font-family:'JetBrains Mono',monospace;font-size:0.7rem;font-weight:500;
+    letter-spacing:0.04em;transform:rotate(-2deg);
+  }
+  .stamp-badge::before{content:"●";font-size:0.6rem;}
+  .fee-amount{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:600;color:var(--espresso);}
+  .fee-amount span{font-size:0.75rem;color:var(--espresso-soft);font-family:'Inter',sans-serif;font-weight:500;}
+
+  /* ---------- SECTIONS ---------- */
+  section{padding:76px 0;position:relative;z-index:1;}
+  .section-border{border-bottom:1px solid var(--line);}
+  .section-tag{
+    font-family:'JetBrains Mono',monospace;font-size:0.72rem;letter-spacing:0.1em;
+    text-transform:uppercase;color:var(--brass-deep);margin-bottom:14px;
+  }
+  h2{
+    font-family:'Fraunces',serif;font-weight:600;font-size:clamp(1.7rem,3vw,2.3rem);
+    letter-spacing:-0.01em;margin-bottom:14px;
+  }
+  .section-sub{color:var(--espresso-soft);font-size:1rem;max-width:56ch;line-height:1.6;margin-bottom:52px;}
+
+  /* how it works - ledger line steps */
+  .ledger-steps{border-top:1px solid var(--espresso);}
+  .ledger-step{
+    display:grid;grid-template-columns:70px 1fr 1fr;gap:24px;
+    padding:26px 0;border-bottom:1px solid var(--line);align-items:start;
+  }
+  @media(max-width:700px){.ledger-step{grid-template-columns:50px 1fr;}}
+  .ledger-num{
+    font-family:'JetBrains Mono',monospace;color:var(--brass-deep);font-size:0.85rem;font-weight:500;
+    padding-top:2px;
+  }
+  .ledger-step h3{
+    font-family:'Fraunces',serif;font-weight:600;font-size:1.15rem;margin-bottom:6px;
+  }
+  .ledger-step p{color:var(--espresso-soft);font-size:0.92rem;line-height:1.55;}
+  .ledger-who{
+    font-family:'JetBrains Mono',monospace;font-size:0.68rem;text-transform:uppercase;
+    letter-spacing:0.06em;color:var(--terracotta);align-self:start;padding-top:3px;
+  }
+  @media(max-width:700px){.ledger-who{grid-column:2;}}
+
+  /* fee schedule table */
+  .fee-table{
+    width:100%;border-collapse:collapse;
+    background:var(--paper);border:1px solid var(--line);border-radius:3px;overflow:hidden;
+  }
+  .fee-table th{
+    text-align:left;font-family:'JetBrains Mono',monospace;font-size:0.68rem;
+    text-transform:uppercase;letter-spacing:0.06em;color:var(--espresso-soft);
+    padding:14px 20px;border-bottom:1px solid var(--line);background:var(--ivory-deep);
+  }
+  .fee-table td{
+    padding:18px 20px;border-bottom:1px solid var(--line);font-size:0.92rem;
+  }
+  .fee-table tr:last-child td{border-bottom:none;}
+  .fee-role{font-family:'Fraunces',serif;font-weight:600;font-size:1.02rem;}
+  .fee-price{font-family:'JetBrains Mono',monospace;color:var(--terracotta);font-weight:500;}
+  .fee-note{color:var(--espresso-soft);font-size:0.85rem;}
+
+  /* two-column audience cards */
+  .audience-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  @media(max-width:700px){.audience-grid{grid-template-columns:1fr;}}
+  .audience-card{
+    background:var(--paper);border:1px solid var(--line);border-radius:3px;
+    padding:32px;
+  }
+  .audience-card .section-tag{margin-bottom:10px;}
+  .audience-card h3{font-family:'Fraunces',serif;font-weight:600;font-size:1.35rem;margin-bottom:12px;}
+  .audience-card p{color:var(--espresso-soft);font-size:0.92rem;line-height:1.6;margin-bottom:20px;}
+  .audience-card ul{list-style:none;margin-bottom:24px;}
+  .audience-card li{
+    font-size:0.88rem;color:var(--espresso);padding:9px 0;
+    border-top:1px dashed var(--line);display:flex;gap:10px;
+  }
+  .audience-card li:first-child{border-top:none;}
+  .audience-card li::before{content:"—";color:var(--brass-deep);flex-shrink:0;}
+
+  /* footer / cta */
+  .cta-section{
+    background:var(--espresso);color:var(--ivory);
+    padding:80px 0;
+  }
+  .cta-section h2{color:var(--ivory);}
+  .cta-section .section-sub{color:#C9BBA6;}
+  .cta-section .section-tag{color:#D9A560;}
+  .cta-actions{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;}
+  .cta-actions .btn-primary{background:var(--terracotta);border-color:var(--terracotta);}
+  .cta-actions .btn-outline{
+    padding:14px 26px;border-radius:2px;font-weight:600;font-size:0.92rem;
+    border:1px solid #7A6C58;color:var(--ivory);
+  }
+  .cta-actions .btn-outline:hover{border-color:var(--ivory);}
+
+  /* ---------- FORMS ---------- */
+  .form-tabs{
+    display:flex;gap:2px;margin:36px 0 28px;
+    border:1px solid #4A3E2E;border-radius:2px;overflow:hidden;width:fit-content;
+  }
+  .form-tab{
+    background:transparent;color:#C9BBA6;border:none;
+    padding:11px 22px;font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:600;
+    cursor:pointer;transition:background 0.2s,color 0.2s;
+  }
+  .form-tab.active{background:var(--terracotta);color:var(--paper);}
+  .form-tab:not(.active):hover{background:#3A2F22;}
+
+  .bureau-form{display:none;background:var(--paper);border-radius:3px;padding:28px;color:var(--espresso);}
+  .bureau-form.active{display:block;}
+  .form-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:16px 18px;margin-bottom:16px;
+  }
+  @media(max-width:700px){.form-grid{grid-template-columns:1fr;}}
+  .form-field{display:flex;flex-direction:column;gap:6px;}
+  .form-field.full{margin-bottom:16px;}
+  .form-field label{
+    font-family:'JetBrains Mono',monospace;font-size:0.68rem;text-transform:uppercase;
+    letter-spacing:0.05em;color:var(--espresso-soft);
+  }
+  .form-field input,.form-field select,.form-field textarea{
+    font-family:'Inter',sans-serif;font-size:0.92rem;color:var(--espresso);
+    background:var(--ivory);border:1px solid var(--line);border-radius:2px;
+    padding:10px 12px;outline:none;transition:border-color 0.2s;
+  }
+  .form-field input:focus,.form-field select:focus,.form-field textarea:focus{
+    border-color:var(--terracotta);
+  }
+  .form-field textarea{resize:vertical;font-family:'Inter',sans-serif;}
+  .form-submit{width:100%;border:none;cursor:pointer;margin-top:4px;}
+  .form-submit:disabled{opacity:0.6;cursor:not-allowed;}
+  .form-status{
+    margin-top:14px;font-size:0.88rem;font-weight:500;min-height:1.2em;
+  }
+  .form-status.success{color:#3D7A4D;}
+  .form-status.error{color:var(--terracotta);}
+
+  footer{
+    background:var(--espresso);color:#8C7E68;
+    padding:28px 0;border-top:1px solid #4A3E2E;
+    font-size:0.8rem;
+  }
+  .footer-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+  footer a{color:#C9BBA6;}
+  footer a:hover{color:var(--ivory);}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="brand">
+      <div class="mark">SBB</div>
+      Salon &amp; Barber Bureau
+    </div>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#fees">Placement fees</a>
+      <a href="#audience">For you</a>
+    </div>
+    <a href="#post" class="nav-cta">Post a role</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Placement Bureau · Kenya</div>
+      <h1>Vetted grooming talent, <em>placed properly</em> — not just posted.</h1>
+      <p class="lede">Salons and barbershops post open chairs. We match them with vetted stylists, barbers and technicians. You only pay when a hire is confirmed — one flat fee, no monthly commitment.</p>
+      <div class="hero-actions">
+        <a href="#post" class="btn-primary">Post an open role</a>
+        <a href="#audience" class="btn-secondary">I'm a professional</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">0</div>
+          <div class="stat-label">Monthly fees for salons</div>
+        </div>
+        <div>
+          <div class="stat-num">1</div>
+          <div class="stat-label">Flat fee, paid on hire</div>
+        </div>
+        <div>
+          <div class="stat-num">3</div>
+          <div class="stat-label">Role tiers, clear pricing</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="registry-card">
+      <div class="registry-head">
+        <div class="registry-title">Placement Registry</div>
+        <div class="registry-id">ENTRY&nbsp;№ 0142</div>
+      </div>
+      <div class="registry-body">
+        <div class="r-row">
+          <div class="r-field">
+            <div class="r-label">Role</div>
+            <div class="r-value">Senior Hair Stylist</div>
+          </div>
+          <div class="r-field">
+            <div class="r-label">Location</div>
+            <div class="r-value">Kilimani, Nairobi</div>
+          </div>
+        </div>
+        <div class="r-field">
+          <div class="r-label">Arrangement</div>
+          <div class="r-value">Permanent · Chair rental + commission</div>
+        </div>
+        <div class="r-row">
+          <div class="r-field">
+            <div class="r-label">Status</div>
+            <div class="r-value">Matched — awaiting confirmation</div>
+          </div>
+          <div class="r-field">
+            <div class="r-label">Candidates reviewed</div>
+            <div class="r-value">4</div>
+          </div>
+        </div>
+        <div class="registry-stamp">
+          <span class="stamp-badge">Fee due on hire</span>
+          <div class="fee-amount">KES 3,000 <span>flat</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how" class="section-border">
+  <div class="wrap">
+    <div class="section-tag">How it works</div>
+    <h2>Three steps, no ongoing subscription.</h2>
+    <p class="section-sub">The bureau exists to do one job well: connect a salon that needs a chair filled with a professional ready to fill it, and confirm the match properly.</p>
+
+    <div class="ledger-steps">
+      <div class="ledger-step">
+        <div class="ledger-num">01</div>
+        <div>
+          <h3>Post the open chair</h3>
+          <p>Salon owner lists the role, location, pay structure and start date. Free to post — no fee until a hire is confirmed.</p>
+        </div>
+        <div class="ledger-who">Salon</div>
+      </div>
+      <div class="ledger-step">
+        <div class="ledger-num">02</div>
+        <div>
+          <h3>Review matched candidates</h3>
+          <p>The bureau shortlists vetted professionals for the role. Salon reviews profiles and picks who to interview.</p>
+        </div>
+        <div class="ledger-who">Bureau</div>
+      </div>
+      <div class="ledger-step">
+        <div class="ledger-num">03</div>
+        <div>
+          <h3>Confirm the hire, pay the fee</h3>
+          <p>Once the salon confirms, pay the flat placement fee via M-Pesa. Contact details are released and you take it from there.</p>
+        </div>
+        <div class="ledger-who">Both parties</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="fees" class="section-border">
+  <div class="wrap">
+    <div class="section-tag">Fee schedule</div>
+    <h2>One flat fee per confirmed hire.</h2>
+    <p class="section-sub">Priced by role level. No percentage cuts, no recurring charges — pay once, when the hire is confirmed.</p>
+
+    <table class="fee-table">
+      <thead>
+        <tr>
+          <th>Role level</th>
+          <th>Placement fee</th>
+          <th>Applies to</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="fee-role">Junior / Apprentice</td>
+          <td class="fee-price">KES 1,500</td>
+          <td class="fee-note">Entry-level stylists, barbers, nail techs</td>
+        </tr>
+        <tr>
+          <td class="fee-role">Senior / Specialist</td>
+          <td class="fee-price">KES 3,000</td>
+          <td class="fee-note">Experienced stylists, colourists, master barbers</td>
+        </tr>
+        <tr>
+          <td class="fee-role">Salon / Shop Manager</td>
+          <td class="fee-price">KES 5,000</td>
+          <td class="fee-note">Floor management, multi-chair oversight</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="audience">
+  <div class="wrap">
+    <div class="section-tag">Built for both sides</div>
+    <h2>Whoever you are, the registry works the same way.</h2>
+    <div class="audience-grid">
+      <div class="audience-card">
+        <div class="section-tag">For salons &amp; barbershops</div>
+        <h3>Fill your chair with someone vetted</h3>
+        <p>Stop relying on word-of-mouth or unverified walk-ins. Post the role, review real profiles, hire with confidence.</p>
+        <ul>
+          <li>Free to post, pay only on confirmed hire</li>
+          <li>Candidates reviewed before they reach you</li>
+          <li>Clear, flat pricing by role level</li>
+        </ul>
+        <a href="#post" class="btn-secondary">Post an open role</a>
+      </div>
+      <div class="audience-card">
+        <div class="section-tag">For stylists &amp; barbers</div>
+        <h3>Get placed at a salon that fits you</h3>
+        <p>List your experience once. The bureau puts you forward for roles that match your skill level and location — no cost to you.</p>
+        <ul>
+          <li>Free for professionals, always</li>
+          <li>Matched to real, open chairs</li>
+          <li>Reached directly once a salon confirms</li>
+        </ul>
+        <a href="#post" class="btn-secondary">Register as a professional</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="post">
+  <div class="wrap">
+    <div class="section-tag">Get started</div>
+    <h2>Post a role or register as a professional.</h2>
+    <p class="section-sub">Fill in the form below — it goes straight into the registry. Prefer to talk first? Reach out on WhatsApp instead.</p>
+
+    <div class="form-tabs">
+      <button type="button" class="form-tab active" data-target="role-form">I'm a salon</button>
+      <button type="button" class="form-tab" data-target="candidate-form">I'm a professional</button>
+    </div>
+
+    <form id="role-form" class="bureau-form active">
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="r-salonName">Salon / Barbershop name *</label>
+          <input type="text" id="r-salonName" required>
+        </div>
+        <div class="form-field">
+          <label for="r-contactName">Contact person</label>
+          <input type="text" id="r-contactName">
+        </div>
+        <div class="form-field">
+          <label for="r-phone">Phone (M-Pesa reachable) *</label>
+          <input type="tel" id="r-phone" placeholder="07XXXXXXXX" required>
+        </div>
+        <div class="form-field">
+          <label for="r-email">Email</label>
+          <input type="email" id="r-email">
+        </div>
+        <div class="form-field">
+          <label for="r-roleTitle">Role title *</label>
+          <input type="text" id="r-roleTitle" placeholder="e.g. Senior Hair Stylist" required>
+        </div>
+        <div class="form-field">
+          <label for="r-roleLevel">Role level *</label>
+          <select id="r-roleLevel" required>
+            <option value="">Select level</option>
+            <option>Junior / Apprentice</option>
+            <option>Senior / Specialist</option>
+            <option>Salon / Shop Manager</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="r-county">County *</label>
+          <input type="text" id="r-county" placeholder="e.g. Nairobi" required>
+        </div>
+        <div class="form-field">
+          <label for="r-arrangement">Arrangement</label>
+          <select id="r-arrangement">
+            <option value="">Select arrangement</option>
+            <option>Permanent - Salary</option>
+            <option>Permanent - Chair rental + commission</option>
+            <option>Permanent - Commission only</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="r-payRange">Pay range (KES)</label>
+          <input type="text" id="r-payRange" placeholder="e.g. 20,000 - 30,000">
+        </div>
+      </div>
+      <div class="form-field full">
+        <label for="r-description">Role description</label>
+        <textarea id="r-description" rows="3" placeholder="What the role involves, hours, expectations..."></textarea>
+      </div>
+      <button type="submit" class="btn-primary form-submit">Post this role</button>
+      <div class="form-status" id="role-form-status"></div>
+    </form>
+
+    <form id="candidate-form" class="bureau-form">
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="c-fullName">Full name *</label>
+          <input type="text" id="c-fullName" required>
+        </div>
+        <div class="form-field">
+          <label for="c-phone">Phone *</label>
+          <input type="tel" id="c-phone" placeholder="07XXXXXXXX" required>
+        </div>
+        <div class="form-field">
+          <label for="c-email">Email</label>
+          <input type="email" id="c-email">
+        </div>
+        <div class="form-field">
+          <label for="c-county">County *</label>
+          <input type="text" id="c-county" placeholder="e.g. Mombasa" required>
+        </div>
+        <div class="form-field">
+          <label for="c-specialty">Specialty *</label>
+          <select id="c-specialty" required>
+            <option value="">Select specialty</option>
+            <option>Hair Stylist</option>
+            <option>Barber</option>
+            <option>Colourist</option>
+            <option>Nail Technician</option>
+            <option>Braider / Loctician</option>
+            <option>Salon Manager</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="c-roleLevel">Experience level *</label>
+          <select id="c-roleLevel" required>
+            <option value="">Select level</option>
+            <option>Junior / Apprentice</option>
+            <option>Senior / Specialist</option>
+            <option>Salon / Shop Manager</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="c-years">Years of experience</label>
+          <input type="number" id="c-years" min="0" step="1">
+        </div>
+      </div>
+      <div class="form-field full">
+        <label for="c-bio">Bio / experience</label>
+        <textarea id="c-bio" rows="3" placeholder="Your training, past salons, specialties..."></textarea>
+      </div>
+      <button type="submit" class="btn-primary form-submit">Register as a professional</button>
+      <div class="form-status" id="candidate-form-status"></div>
+    </form>
+
+    <div class="cta-actions" style="margin-top:28px;">
+      <a href="https://wa.me/254725599354" class="btn-outline">Message on WhatsApp instead</a>
+      <a href="mailto:nicclarckj@gmail.com" class="btn-outline">Email the bureau</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-row">
+    <div>Salon &amp; Barber Bureau — Nairobi, Kenya</div>
+    <div><a href="https://wa.me/254725599354">WhatsApp 0725 599 354</a> · <a href="mailto:nicclarckj@gmail.com">nicclarckj@gmail.com</a></div>
+  </div>
+</footer>
+
+
+<script>
+  // ===== SET THIS ONE LINE ONCE YOU HAVE YOUR RAILWAY URL =====
+  const API_BASE = 'https://salon-barber-bureau-api-production.up.railway.app';
+  // ==============================================================
+
+  // Tab switching
+  document.querySelectorAll('.form-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.form-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.bureau-form').forEach(f => f.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.target).classList.add('active');
+    });
+  });
+
+  function setStatus(el, message, type) {
+    el.textContent = message;
+    el.className = 'form-status ' + (type || '');
+  }
+
+  async function safeJsonFetch(url, options) {
+    const res = await fetch(url, options);
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      // Function endpoint didn't respond with JSON — almost always a 404/500 HTML page,
+      // meaning the serverless function isn't deployed or reachable at this path.
+      throw new Error(`Server did not return JSON (status ${res.status}). The form backend may not be deployed correctly — contact the site admin.`);
+    }
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Something went wrong');
+    return data;
+  }
+
+  // Role posting form
+  const roleForm = document.getElementById('role-form');
+  roleForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const statusEl = document.getElementById('role-form-status');
+    const btn = roleForm.querySelector('.form-submit');
+    btn.disabled = true;
+    setStatus(statusEl, 'Posting role...', '');
+
+    const payload = {
+      salonName: document.getElementById('r-salonName').value,
+      contactName: document.getElementById('r-contactName').value,
+      phone: document.getElementById('r-phone').value,
+      email: document.getElementById('r-email').value,
+      roleTitle: document.getElementById('r-roleTitle').value,
+      roleLevel: document.getElementById('r-roleLevel').value,
+      county: document.getElementById('r-county').value,
+      arrangement: document.getElementById('r-arrangement').value,
+      payRange: document.getElementById('r-payRange').value,
+      description: document.getElementById('r-description').value
+    };
+
+    try {
+      const data = await safeJsonFetch(`${API_BASE}/api/post-role`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      setStatus(statusEl, `Role posted. Placement fee on hire: KES ${data.placementFee || '—'}. We'll be in touch with matches.`, 'success');
+      roleForm.reset();
+    } catch (err) {
+      setStatus(statusEl, err.message || 'Could not post role. Try again or WhatsApp us.', 'error');
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  // Candidate registration form
+  const candidateForm = document.getElementById('candidate-form');
+  candidateForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const statusEl = document.getElementById('candidate-form-status');
+    const btn = candidateForm.querySelector('.form-submit');
+    btn.disabled = true;
+    setStatus(statusEl, 'Registering...', '');
+
+    const payload = {
+      fullName: document.getElementById('c-fullName').value,
+      phone: document.getElementById('c-phone').value,
+      email: document.getElementById('c-email').value,
+      county: document.getElementById('c-county').value,
+      specialty: document.getElementById('c-specialty').value,
+      roleLevel: document.getElementById('c-roleLevel').value,
+      yearsExperience: document.getElementById('c-years').value,
+      bio: document.getElementById('c-bio').value
+    };
+
+    try {
+      const data = await safeJsonFetch(`${API_BASE}/api/register-candidate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      setStatus(statusEl, "You're registered. We'll reach out on WhatsApp or phone when a matching role opens.", 'success');
+      candidateForm.reset();
+    } catch (err) {
+      setStatus(statusEl, err.message || 'Could not register. Try again or WhatsApp us.', 'error');
+    } finally {
+      btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
